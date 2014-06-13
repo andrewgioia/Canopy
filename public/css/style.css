@@ -14,7 +14,7 @@ a {
 }
 
     a:hover {
-        color: #007ab1;
+        color: #016896;
     }
 
 header {
@@ -59,14 +59,25 @@ header {
         header menu a {
             background: #eee;
             border-radius: 3px;
+            color: #383838;
             display: inline-block;
             margin: 0 0 0 10px;
             text-shadow: 0 1px 0 #fff;
-            padding: 8px 12px;
+            padding: 8px 12px 9px;
         }
 
         header menu a:hover {
             background: #ddd;
+            color: #000;
+        }
+
+        header menu .fa {
+            padding: 0 8px 0 0;
+            position: relative;
+        }
+
+        header menu .pull-up {
+            top: -1px;
         }
 
 #wrapper {
