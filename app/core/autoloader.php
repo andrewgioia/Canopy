@@ -26,4 +26,4 @@ spl_autoload_register('autoloader');
 //start sessions
 Session::init();
 
-require('app/core/config.php');
+require( 'app/core/config.php' );

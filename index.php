@@ -1,12 +1,12 @@
 <?php
-require('app/core/autoloader.php');
+require( 'app/core/autoloader.php' );
 
-//define routes
-Router::get('/', 'welcome@index');
+// define routes
+Router::get( '/', 'dashboard@index' );
 
-//if no route found
-Router::error('error@index');
+// if no route found
+Router::error( 'error@index' );
 
-//execute matched routes
+// execute matched routes
 Router::dispatch();
 ob_flush();
