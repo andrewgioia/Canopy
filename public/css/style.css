@@ -1,0 +1,81 @@
+body {
+    background: #eee;
+    color: #333;
+    font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", 
+        Geneva, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    color: #008eae;
+    text-decoration: none;
+}
+
+    a:hover {
+        color: #007ab1;
+    }
+
+header {
+    background: #fff;
+    color: #333;
+    height: 64px;
+    margin: 0 0 20px;
+}
+
+    header .colors {
+        background: linear-gradient(to right, 
+            rgba(0,122,177,1) 0%,
+            rgba(0,122,177,1) 14%,
+            rgba(0,142,174,1) 14%,
+            rgba(0,142,174,1) 28%,
+            rgba(0,154,156,1) 28%,
+            rgba(0,154,156,1) 42%,
+            rgba(0,165,127,1) 42%,
+            rgba(0,165,127,1) 57%,
+            rgba(0,177,88,1) 57%,
+            rgba(0,177,88,1) 71%,
+            rgba(85,175,83,1) 71%,
+            rgba(85,175,83,1) 85%,
+            rgba(158,182,76,1) 85%,
+            rgba(158,182,76,1) 100%);
+        width: 100%;
+        height: 5px;
+    }
+
+    header .logo {
+        float: left;
+        font-family: Molengo;
+        font-size: 32px;
+        padding: 9px 0 0 20px;
+    }
+
+    header menu {
+        float: right;
+        margin: 12px 20px 0 0;
+    }
+
+        header menu a {
+            background: #eee;
+            border-radius: 3px;
+            display: inline-block;
+            margin: 0 0 0 10px;
+            text-shadow: 0 1px 0 #fff;
+            padding: 8px 12px;
+        }
+
+        header menu a:hover {
+            background: #ddd;
+        }
+
+#wrapper {
+
+}
+
+main {
+    background: #fff;
+    border-radius: 6px;
+    margin: 20px;
+    padding: 20px;
+}

@@ -140,7 +140,23 @@ $y_vals = implode( ",", $days );
                 }
             },
             tooltip: {
-                enabled: true
+                enabled: true,
+                animation: false,
+                backgroundColor: 'rgba(0,0,0,.7)',
+                borderWidth: 0,
+                shadow: false,
+                shared: true,
+                style: {
+                    color: '#fff',
+                    fontSize: '13px',
+                    padding: 0
+                },
+                useHTML: true,
+                formatter: function() {
+                    var day = moment( this.x+'-04-2014', 'ddd DD-MM-YYYY' ).format( 'dddd (M/D)' );
+                    return '<div style="text-align:center;line-height:1.8em;padding:6px 10px 3px;">'+
+                        day + '<br /><b>'+ this.y+' kWh</b></div>';
+                }
             },
             legend: {
                 enabled: false
