@@ -1,0 +1,14 @@
+h1 {
+    font-size: 24px;
+    font-weight: normal;
+    margin: 0 0 20px;
+}
+
+h2 {
+    font-size: 20px;
+    font-weight: normal;
+    margin: 25px 0;
+}
+    h2.home {
+        margin: 5px 0 20px 2px;
+    }

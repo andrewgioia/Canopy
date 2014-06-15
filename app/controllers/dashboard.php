@@ -9,7 +9,10 @@ class Dashboard extends Controller {
         $this->_xml = $this->loadModel( 'xml_model' );
     }
 
-    public function index( $request = null ) {
+    // Main dashboard screen
+    //
+    public function index( $request = null ) 
+    {
 
         // Get the contents of the selected XML file
         //        
@@ -39,8 +42,10 @@ class Dashboard extends Controller {
                 }
             }
 
-            $data[ 'x_days' ] = "'".implode( "','", $x_vals )."'";
-            $data[ 'y_vals' ] = implode( ",", $days );
+            $data[ 'chart' ] = array (
+                'title' => "Daily Energy Use (April 2014)",
+                'x_days' => "'".implode( "','", $x_vals )."'",
+                'y_vals' => implode( ",", $days ) );
 
         } else {
 
@@ -52,6 +57,7 @@ class Dashboard extends Controller {
         $this->view->rendertemplate( 'header', $data );
         $this->view->render( 'dashboard/dashboard', $data );
         $this->view->rendertemplate( 'footer', $data );
+
     }
 
 }

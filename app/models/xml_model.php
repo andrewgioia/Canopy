@@ -14,8 +14,8 @@ class Xml_model extends Model {
     //   @string $file (filename of the xml file)
     //   @pointer &$error (reference to $error variable)
     //
-    function get_xml_file( $file = '', &$error = false ) {
-
+    function get_xml_file( $file = '', &$error = false ) 
+    {
         // Verify that a filename was passed in
         //
         if ( ! $file || $file == '' ) {
@@ -38,13 +38,13 @@ class Xml_model extends Model {
         // Return the XML
         //
         return $xml;
-
     }
 
     // Convert an xml file's contents to a PHP array
     //   @object $xml (object returned by simplexml_load_file
     //
-    function convert_to_array ( $xml ) {
+    function convert_to_array ( $xml ) 
+    {
         $array = json_decode( json_encode( $xml ) );
         return $array;
     }
@@ -52,7 +52,8 @@ class Xml_model extends Model {
     // Get the interval readings from the xml array
     //   @array $array (array returned from get_xml_array)
     //
-    function get_readings ( $array ) {
+    function get_readings ( $array ) 
+    {
         return $array->entry[3]->content->IntervalBlock->IntervalReading;
     }
 
@@ -64,8 +65,8 @@ class Xml_model extends Model {
     // wattage and cost by hour
     //   @array $array (readings array from get_readings)
     //
-    function get_month( $array ) {
-
+    function get_month( $array ) 
+    {
         // Set an array to dump our days into
         //
         $month = array();
@@ -91,7 +92,6 @@ class Xml_model extends Model {
         // Return the month array
         //
         return $month;
-
     }
 
 }
