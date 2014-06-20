@@ -69,7 +69,8 @@ class Dashboard extends Controller {
                 }
 
                 $data[ 'chart' ] = array (
-                    'title' => "Daily Energy Use (April 2014)",
+                    'title' => "Daily Energy Use (".
+                        date( 'F Y', mktime( 0, 0, 0, $month, $day, $year ) ).")",
                     'x_days' => "'".implode( "','", $x_vals )."'",
                     'y_vals' => implode( ",", $days ) );
 
@@ -82,6 +83,11 @@ class Dashboard extends Controller {
                 //
                 $data[ 'weather' ] = 
                     $this->_weather->get_daily_weather_for_month( $year, $month );
+
+                // Get the vacation times
+                //
+                $data[ 'vacations' ] = 
+                    $this->_settings->get_vacations_for_month( $year, $month );
 
             }
 

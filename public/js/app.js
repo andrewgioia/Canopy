@@ -20,7 +20,11 @@ function hideLoading( timeout ) {
 
 function loadDisplayEvents() {
 
+    // Let's get some global default date variables
+    //
     var bang = new Date( 2013, 0, 1, 0, 0 );
+    var year = $( '.year.picker' ).val();
+    var day = moment( $( '.day.picker' ).val(), 'MMMM D, YYYY' ).format( 'D' );
 
     // Year date picker
     //
@@ -58,6 +62,7 @@ function loadDisplayEvents() {
         monthNamesShort: ['January','February','March','April','May','June',
             'July','August','September','October','November','December'],
         onClose: function( dateText, inst ) {
+            console.log( 'on close' );
             var year = $( '#ui-datepicker-div .ui-datepicker-year :selected' ).val();
             var month = $( '#ui-datepicker-div .ui-datepicker-month :selected' ).val();
             $( this ).val( $.datepicker.formatDate( 'MM yy', new Date( year, month, 1 ) ) );

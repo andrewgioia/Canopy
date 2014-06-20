@@ -19,3 +19,11 @@ CREATE TABLE IF NOT EXISTS `weather_hours` (
   `weather` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`date_day`,`date_hour`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Hourly weather conditions';
+
+CREATE TABLE IF NOT EXISTS `vacations` (
+  `date_start` datetime NOT NULL,
+  `date_end` datetime NOT NULL,
+  `title` varchar(256) NOT NULL,
+  `house_empty` enum('0','1') NOT NULL DEFAULT '1',
+  PRIMARY KEY (`date_start`,`date_end`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Time away from the house';

@@ -22,7 +22,6 @@ class Settings extends Controller {
         $this->view->rendertemplate( 'footer', $data );
     }
 
-
     //
     // Settings actions
     //
@@ -30,8 +29,8 @@ class Settings extends Controller {
     // Add hourly weather values and the daily summary for a day
     //
     public function add_weather_for_day(
-        $date = 'January 1, 2014',
-        $ajax = false )
+        $date = '',                 // day to add               @MMMM d, YYYY
+        $ajax = false )             // ajax bit
     {
         // If we have an ajax post, set the date vars
         //
@@ -78,6 +77,65 @@ class Settings extends Controller {
                 }
             }
             echo 'Weather imported successfully for '.date( 'F jS, Y', strtotime( $date ) );
+        }
+    }
+
+    // Add a new vacation time period
+    //
+    public function add_vacation(
+        $start_date = '',           // start date               @string 'yyyy-mm-dd'
+        $start_time = '00:00',      // start time               @string 'hh:ii'
+        $end_date = '',             // end date                 @string 'yyyy-mm-dd'
+        $end_time = '00:00',        // end time                 @string 'hh:ii'
+        $title = '',                // description              @varchar(256)
+        $empty = 1,                 // bit for empty house      @enum(0,1)
+        $ajax = false )
+    {
+        // If we have an ajax post, set the vars
+        //
+        if ( $_POST ) {
+            $start_date = $_POST[ 'start_date' ];
+            $start_time = $_POST[ 'start_time' ];
+            $end_date = $_POST[ 'end_date' ];
+            $end_time = $_POST[ 'end_time' ];
+            $title = $_POST[ 'title' ];
+            $empty = $_POST[ 'empty' ];
+            $ajax = $_POST[ 'ajax' ];
+        }
+
+        // Validate the title
+        //
+        if ( strlen( trim( $title ) ) == 0 ) {
+            echo "Please enter a title!";
+            return false;
+        }
+
+        // Validate the date
+        //
+        if ( ! strtotime( $start_date ) || ! strtotime( $end_date ) ) {
+            echo "Please enter a valid date for the start and end date.";
+            return false;
+        }
+
+        // Format the data to make sure it fits
+        //
+        $start = date( 'Y-m-d', strtotime( $start_date ) )." ".$start_time.":00";
+        $end = date( 'Y-m-d', strtotime( $end_date ) )." ".$end_time.":00";
+        $empty = ( $empty == 0 ) ? 0 : 1;
+
+        // Insert this into the database
+        //
+        $insert = $this->_settings->insert_vacation(
+            $start, $end, $title, $empty, $error = false );
+
+        // Close this out
+        //
+        if ( ! $error ) {
+            echo "Vacation added successfully!";
+            return true;
+        } else {
+            echo "There was a problem adding that vacation. Please try again.";
+            return false;
         }
     }
 

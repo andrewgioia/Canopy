@@ -51,7 +51,9 @@
     </a>
 </menu>
 
-<div id="month" style="width:100%; height:325px;"></div>
+<div id="month" style="width:100%; height:325px;">
+    <!-- Chart -->
+</div>
 
 <script type="text/javascript">
 
@@ -72,9 +74,10 @@
                     lineColor: '#aaa',
                     plotBands: [
 <?php
-    // loop through the weekends array to print the plotbands
+    // Loop through the weekends array to print the plotbands
     //
-    if ( is_array( $data[ 'weekends' ] ) && count( $data[ 'weekends' ] ) > 0 ) :
+    if ( is_array( $data[ 'weekends' ] ) && count( $data[ 'weekends' ] ) > 0 ):
+        $count = count( $data[ 'weekends' ] );
         foreach ( $data[ 'weekends' ] as $we => $vals ):
             $sat = ( isset( $vals[ 's' ] ) ) ? $vals[ 's' ] - 1.5 : $vals[ 'u' ] - 1.5;
             $sun = ( isset( $vals[ 'u' ] ) ) ? $vals[ 'u' ] - 0.5 : $vals[ 's' ] - 0.5;
@@ -84,16 +87,31 @@
                             from: ".$sat.", 
                             to: ".$sun.", 
                             id: 'weekend-".$we."' 
-                        },";
+                        }"; 
+            echo ( $we < $count ) ? "," : "";
+        endforeach;
+    endif;
+
+    // Loop through the vacations array to show those plotbands
+    //
+    if ( is_array( $data[ 'vacations' ] ) && count( $data[ 'vacations' ] ) > 0 ):
+        $have_vacations = 1;
+        foreach ( $data[ 'vacations' ] as $v => $vals ):
+            $start = date( 'j', strtotime( $vals->date_start ) );
+            $start = ( $start - 1.5 > 0 ) ? $start - 1.5 : 0;
+            $end = date( 'j', strtotime( $vals->date_end ) );
+            $end = ( $end - 0.5 > 0 ) ? $end - 0.5 : 0;
+            echo "
+                        ,
+                        { 
+                            color: 'rgba(0,122,177,.1)', 
+                            from: ".$start.", 
+                            to: ".$end.", 
+                            id: 'vacation-".$v."' 
+                        }";
         endforeach;
     endif; ?>
 
-                        { 
-                            color: 'rgba(0,122,177,.1)', 
-                            from: 15.5, 
-                            to: 22.5, 
-                            id: 'vacation-1' 
-                        }
                     ]
                 }
             ],
@@ -282,12 +300,30 @@
         var showing_vacation = true;
         $( '#toggleVacation' ).on( 'click', function() {
             if ( ! showing_vacation ) {
-                chart.xAxis[0].addPlotBand({
-                    color: 'rgba(0,122,177,.1)', from: 15.5, to: 22.5, id: 'vacation-1'
-                });
+<?php
+    if ( $have_vacations == 1 ):
+        foreach ( $data[ 'vacations' ] as $v => $vals ):
+            $start = date( 'j', strtotime( $vals->date_start ) );
+            $start = ( $start - 1.5 > 0 ) ? $start - 1.5 : 0;
+            $end = date( 'j', strtotime( $vals->date_end ) );
+            $end = ( $end - 0.5 > 0 ) ? $end - 0.5 : 0;
+            echo "
+                    chart.xAxis[0].addPlotBand({
+                        color: 'rgba(0,122,177,.1)', from: ".$start.", to: ".$end.", id: 'vacation-".$v."'
+                    });";
+        endforeach;
+    endif; ?>
+
                 $( this ).addClass( 'on' );
             } else {
-                chart.xAxis[0].removePlotBand( 'vacation-1' );
+<?php
+    if ( $have_vacations == 1 ):
+        foreach ( $data[ 'vacations' ] as $v => $vals ):
+            echo"
+                chart.xAxis[0].removePlotBand( 'vacation-".$v."' );";
+        endforeach;
+    endif; ?>
+
                 $( this ).removeClass( 'on' );
             }
             showing_vacation = ! showing_vacation;

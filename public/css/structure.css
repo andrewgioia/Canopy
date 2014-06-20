@@ -123,4 +123,5 @@ menu.controls {
 
 .relative-position { position: relative; }
 .float-left { float: left; }
+.clear { clear: both; }
 .hide { display: none; }

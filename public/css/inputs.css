@@ -23,6 +23,14 @@ select:disabled {
     cursor: not-allowed;
 }
 
+label {
+    color: #666;
+    display: block;
+    font-size: 16px;
+    font-weight: normal;
+    padding: 0 0 10px;
+}
+
 .picker {
     padding: 3px 32px 4px !important;
     text-align: center;
@@ -30,14 +38,20 @@ select:disabled {
 }
 
 .input-link {
-    margin-top: 9px;
+    margin-top: 10px;
     position: absolute;
 }
 
     .input-link#displayNext {
-        right: 153px;
+        right: 154px;
     }
 
     .input-link#displayPrev {
         right: 319px;
     }
+
+.addv-title { width: 50%; }
+.addv-wrapper { padding: 0 0 20px; }
+.addv-date-wrapper { width: 27%; }
+.addv-date { margin-right: 3%; width: 55%; }
+.addv-time { margin-right: 0; width: 20%; }

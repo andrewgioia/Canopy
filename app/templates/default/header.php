@@ -12,10 +12,12 @@
     <script src="<?php echo url::get_asset_path( 'js/highcharts-more.js' ); ?>"></script>
     <script src="<?php echo url::get_asset_path( 'js/highcharts-exporting.js' ); ?>"></script>
     <script src="<?php echo url::get_asset_path( 'js/moment.min.js' ); ?>"></script>
+    <script src="<?php echo url::get_asset_path( 'js/datetimepicker.js' ); ?>"></script>
     <script src="<?php echo url::get_asset_path( 'js/app.js' ); ?>"></script>
     <link href="http://fonts.googleapis.com/css?family=Molengo" rel="stylesheet" type="text/css" />
     <link href="<?php echo url::get_asset_path( 'css/jquery-ui.css' ); ?>" rel="stylesheet" type="text/css">
     <link href="<?php echo url::get_asset_path( 'css/font-awesome.css' ); ?>" rel="stylesheet" type="text/css">
+    <link href="<?php echo url::get_asset_path( 'css/datetimepicker.css' ); ?>" rel="stylesheet" type="text/css">
     <link href="<?php echo url::get_asset_path( 'css/app.css' ); ?>" rel="stylesheet" type="text/css">
 </head>
 

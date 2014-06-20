@@ -6,6 +6,8 @@ class Settings_model extends Model {
         parent::__construct();
     }
 
+    // Get the weekends for a specific month
+    //
     function get_weekends_for_month( 
         $year = 2014,
         $month = 01 )
@@ -31,6 +33,40 @@ class Settings_model extends Model {
         }
 
         return $weekends;
+    }
+
+    // Get the vacation times for a specific month
+    //
+    public function get_vacations_for_month(
+        $year = 2014,
+        $month = 01 )
+    {
+        $results = $this->_db->select( 
+           "SELECT * 
+            FROM vacations
+            WHERE ( date_start >= '".$year."-".$month."-01' && date_start <= '".$year."-".$month."-31' )
+               || ( date_end >= '".$year."-".$month."-01' && date_end <= '".$year."-".$month."-31' ) ");
+        if ( is_array( $results ) ) {
+            return $results;
+        } else {
+            return false;
+        }
+    }
+
+    // Add a new vacation to the database
+    //
+    public function insert_vacation(
+        $start,
+        $end,
+        $title,
+        $empty )
+    {
+        $data = array(
+            'date_start' => $start, 
+            'date_end' => $end,
+            'title' => $title,
+            'house_empty' => $empty );
+        $insert = $this->_db->insert( 'vacations', $data );
     }
 
 }
