@@ -1,3 +1,8 @@
+<div style="
+    background: linear-gradient(to right, rgba(0,122,177,1) 0%, rgba(0,122,177,1) 14%, rgba(0,142,174,1) 14%, rgba(0,142,174,1) 28%, rgba(0,154,156,1) 28%, rgba(0,154,156,1) 42%, rgba(0,165,127,1) 42%, rgba(0,165,127,1) 57%, rgba(0,177,88,1) 57%, rgba(0,177,88,1) 71%, rgba(85,175,83,1) 71%, rgba(85,175,83,1) 85%, rgba(158,182,76,1) 85%, rgba(158,182,76,1) 100%);
+    width: 100%;
+    height: 5px;
+    margin-bottom: -20px;"></div>
 # Canopy
 
 Working title for home energy data analysis and visualization tools. I'm interested in how we use energy at home to help make better decisions, plus charts and data are fun :)
