@@ -1,4 +1,4 @@
-app/core/config.php
+app/core/config.local.php
 errorlog.html
 .DS_Store
 .icon

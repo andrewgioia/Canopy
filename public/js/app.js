@@ -20,12 +20,16 @@ function hideLoading( timeout ) {
 
 function loadDisplayEvents() {
 
+    var bang = new Date( 2013, 0, 1, 0, 0 );
+
     // Year date picker
     //
     $( '.year.picker' ).datepicker({ 
-        changeMonth: false,
+        changeMonth: true,
         changeYear: true,
         showButtonPanel: true,
+        maxDate: 0,
+        minDate: bang,
         monthNamesShort: ['January','February','March','April','May','June',
             'July','August','September','October','November','December'],
         onClose: function( dateText, inst ) {
@@ -49,6 +53,8 @@ function loadDisplayEvents() {
         changeMonth: true,
         changeYear: true,
         showButtonPanel: true,
+        maxDate: 0,
+        minDate: bang,
         monthNamesShort: ['January','February','March','April','May','June',
             'July','August','September','October','November','December'],
         onClose: function( dateText, inst ) {
@@ -72,6 +78,8 @@ function loadDisplayEvents() {
         changeMonth: true,
         changeYear: true,
         showButtonPanel: false,
+        maxDate: 0,
+        minDate: bang,
         monthNamesShort: ['January','February','March','April','May','June',
             'July','August','September','October','November','December']
     }).focus( function() {

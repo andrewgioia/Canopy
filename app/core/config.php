@@ -1,27 +1,30 @@
 <?php
 
-set_exception_handler('logger::exception_handler');
-set_error_handler('logger::error_handler');
+set_exception_handler( 'logger::exception_handler' );
+set_error_handler( 'logger::error_handler' );
 
-//set timezone
-date_default_timezone_set('Europe/London');
+// Set timezone
+date_default_timezone_set( 'America/New_York' );
 
-//site address
-define('DIR','http://domain.com/');
+// Site address
+define( 'DIR', 'localhost' );
 
-//database details ONLY NEEDED IF USING A DATABASE
-define('DB_TYPE','mysql');
-define('DB_HOST','localhost');
-define('DB_NAME','database_name');
-define('DB_USER','username');
-define('DB_PASS','password');
-define('PREFIX','smvc_');
+// Database details
+define( 'DB_TYPE', 'mysql' );
+define( 'DB_HOST', 'localhost' );
+define( 'DB_NAME', 'canopy' );
+define( 'DB_USER', '' );
+define( 'DB_PASS', '' );
+define( 'PREFIX', '' );
 
-//set prefix for sessions
-define('SESSION_PREFIX','smvc_');
+// API details
+define( 'WU_KEY', '' );
 
-//optionall create a constant for the name of the site
-define('SITETITLE','Simple MVC Framework v2');
+// Set prefix for sessions
+define( 'SESSION_PREFIX','canopy' );
 
-//set the default template
-Session::set('template','default');
+// Optional create a constant for the name of the site
+define( 'SITETITLE', 'Canopy' );
+
+// Set the default template
+Session::set( 'template', 'default' );
