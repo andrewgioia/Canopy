@@ -6,3 +6,38 @@ input[type="text"] {
     outline: none;
     padding: 3px 8px 4px;
 }
+
+select {
+    border: 1px solid #ccc;
+    border-bottom: 1px solid #aaa;
+    font-size: 15px;
+    height: 36px;
+    padding: 6px 5px;
+    border-radius: 3px;
+}
+
+input:disabled,
+select:disabled {
+    background: rgba( 255, 255, 255, .6 );
+    color: #666;
+    cursor: not-allowed;
+}
+
+.picker {
+    padding: 3px 32px 4px !important;
+    text-align: center;
+    width: 120px;
+}
+
+.input-link {
+    margin-top: 9px;
+    position: absolute;
+}
+
+    .input-link#displayNext {
+        right: 153px;
+    }
+
+    .input-link#displayPrev {
+        right: 319px;
+    }

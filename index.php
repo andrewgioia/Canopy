@@ -4,12 +4,17 @@ error_reporting(E_ALL);
 
 require( 'app/core/autoloader.php' );
 
-// define routes
+// Define routes (route, controller@method)
 Router::get( '/', 'dashboard@index' );
+Router::get( '/home', 'dashboard@index' );
+Router::post( '/home', 'dashboard@index' );
+Router::get( '/settings', 'settings@index' );
+Router::get( '/settings/weather/add_day', 'settings@add_weather_for_day' );
+Router::post( '/settings/weather/add_day', 'settings@add_weather_for_day' );
 
-// if no route found
+// If no route is found, throw an error
 Router::error( 'error@index' );
 
-// execute matched routes
+// Execute matched routes
 Router::dispatch();
 ob_flush();

@@ -88,8 +88,39 @@ menu.controls {
     float: right;
 }
 
-    menu.controls .right-pad {
-        margin-right: 30px; 
+    menu.controls .right-pad { margin-right: 30px; }
+    menu.controls input.right-pad { margin-right: 25px; }
+
+.dropdown {
+    background: #ddd;
+    border-bottom: 1px solid #aaa;
+    border-radius: 3px 0 3px 3px;
+    display: block;
+    font-size: 13px;
+    padding: 3px 4px;
+    position: absolute;
+    top: 32px;
+    right: 0;
+    width: 175px;
+    z-index: 10;
+}
+
+    .dropdown-launch.active {
+        background: #ddd;
     }
 
+    .dropdown .action {
+        border-radius: 3px;
+        display: block;
+        padding: 5px 10px;
+        text-align: left;
+        text-shadow: none;
+    }
+
+    .dropdown .action:hover {
+        background: #d1d1d1;
+    }
+
+.relative-position { position: relative; }
 .float-left { float: left; }
+.hide { display: none; }

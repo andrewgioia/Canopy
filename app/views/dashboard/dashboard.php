@@ -13,10 +13,42 @@
         <i class="fa fa-plane" style="top:1px;position:relative"></i>
     </a>
 
-    <a href="javascript:;" class="toggle button left">Year</a>
-    <a href="javascript:;" class="toggle button inner on">Month</a>
-    <a href="javascript:;" class="toggle button right">Hourly</a>
-    <input type="text" size="15" class="control monthPicker" value="April 2014" />
+    <a href="javascript:;" id="displayYear" data-display="year" class="toggle button left">Year</a>
+    <a href="javascript:;" id="displayMonth" data-display="month" class="toggle button inner on">Month</a>
+    <a href="javascript:;" id="displayDay" data-display="day" class="toggle button right">Day</a>
+    <input type="text" size="15" class="control year picker hide" 
+        value="<?php echo date( 'Y', mktime(0,0,0,$data['m'],$data['d'],$data['y']) );?>" />
+    <input type="text" size="15" class="control month picker" 
+        value="<?php echo date( 'F Y', mktime(0,0,0,$data['m'],$data['d'],$data['y']) );?>" />
+    <input type="text" id="" size="15" class="control day picker hide"
+        value="<?php echo date( 'F d, Y', mktime(0,0,0,$data['m'],$data['d'],$data['y']) );?>" />
+    <a href="javascript:;" id="changeDisplay" class="square icon button right-pad">
+        <i class="fa fa-filter"></i>
+    </a>
+    <a href="javascript:;" id="displayPrev" class="input-link">
+        <i class="fa fa-chevron-left"></i>
+    </a>
+    <a href="javascript:;" id="displayNext" class="input-link">
+        <i class="fa fa-chevron-right"></i>
+    </a>
+
+    <a href="javascript:;" id="exportChart" class="square icon button dropdown-launch">
+        <i class="fa fa-cog"></i>
+        <span id="exportChartMenu" class="dropdown hide">
+            <span class="png action">
+                <i class="fa fa-circle blue-color"></i> 
+                &nbsp;Export as PNG image
+            </span>
+            <span class="svg action">
+                <i class="fa fa-circle teal-color"></i> 
+                &nbsp;Export as SVG vector
+            </span>
+            <span class="pdf action">
+                <i class="fa fa-circle green-color"></i> 
+                &nbsp;Export as PDF file
+            </span>
+        </span>
+    </a>
 </menu>
 
 <div id="month" style="width:100%; height:325px;"></div>
@@ -32,18 +64,39 @@
             title: {
                 text: null
             },
-            xAxis: [{
+            xAxis: [
+                {
                     categories: [<?php echo $data[ 'chart' ][ 'x_days' ]; ?>],
-                    plotBands: [
-                        { color: '#eaf2f6', from: 15.5, to: 22.5 },
-                        { color: 'rgba(120,120,120,.1)', from: 3.5, to: 5.5 },
-                        { color: 'rgba(120,120,120,.1)', from: 10.5, to: 12.5 },
-                        { color: 'rgba(120,120,120,.1)', from: 17.5, to: 19.5 },
-                        { color: 'rgba(120,120,120,.1)', from: 24.5, to: 26.5 },
-                    ],
+                    type: 'datetime',
                     tickColor: '#bbb',
-                    lineColor: '#aaa'
-            }],
+                    lineColor: '#aaa',
+                    plotBands: [
+<?php
+    // loop through the weekends array to print the plotbands
+    //
+    if ( is_array( $data[ 'weekends' ] ) && count( $data[ 'weekends' ] ) > 0 ) :
+        foreach ( $data[ 'weekends' ] as $we => $vals ):
+            $sat = ( isset( $vals[ 's' ] ) ) ? $vals[ 's' ] - 1.5 : $vals[ 'u' ] - 1.5;
+            $sun = ( isset( $vals[ 'u' ] ) ) ? $vals[ 'u' ] - 0.5 : $vals[ 's' ] - 0.5;
+            echo "
+                        { 
+                            color: 'rgba(120,120,120,.1)', 
+                            from: ".$sat.", 
+                            to: ".$sun.", 
+                            id: 'weekend-".$we."' 
+                        },";
+        endforeach;
+    endif; ?>
+
+                        { 
+                            color: 'rgba(0,122,177,.1)', 
+                            from: 15.5, 
+                            to: 22.5, 
+                            id: 'vacation-1' 
+                        }
+                    ]
+                }
+            ],
             yAxis: [
                 {
                     title: null,
@@ -67,7 +120,7 @@
             tooltip: {
                 enabled: true,
                 animation: false,
-                backgroundColor: 'rgba(0,0,0,.7)',
+                backgroundColor: 'rgba(0,0,0,.8)',
                 borderWidth: 0,
                 shadow: false,
                 shared: true,
@@ -78,9 +131,35 @@
                 },
                 useHTML: true,
                 formatter: function() {
+
                     var day = moment( this.x+'-04-2014', 'ddd DD-MM-YYYY' ).format( 'dddd (M/D)' );
-                    return '<div style="text-align:center;line-height:1.8em;padding:6px 10px 3px;">'+
-                        day + '<br /><b>'+ this.y+' kWh</b></div>';
+                    var s = '<div style="text-align:center;padding:6px 10px 3px;">'+day+'<br /><b>';
+
+                    var chart = this.points[0].series.chart;
+                    var cats = chart.xAxis[0].categories;
+                    var index = 0;
+
+                    // compute index of corresponding y value in each data array
+                    while ( this.x !== cats[index] ) { 
+                        index++; 
+                    }
+
+                    // loop through series array, using index to get values
+                    var val = '';
+                    $.each( chart.series, function( i, series ) { 
+                        if ( series.name == 'Series 1' ) {
+                            if ( series.chart.series[0].visible ) {
+                                val = '<b style="color:#e3faff">'+series.data[index].low+'°</b>|'+
+                                      '<b style="color:#dfc4bf">'+series.data[index].high+'°</b> &nbsp;';
+                            }
+                        } else {
+                            val = series.data[index].y+'kWh ';
+                        }
+                        s += val;
+                    });  
+
+                    return s;
+
                 }
             },
             legend: {
@@ -89,18 +168,35 @@
             series: [
                 {
                     name: null,
+                    id: 'weather',
                     yAxis: 1,
                     type: 'errorbar',
                     color: 'rgba(0,0,0,.2)',
                     stemWidth: 9,
                     whiskerWidth: 0,
-                    data: [ [37,61], [41,61], [45,66], [44,51], [42,56],
-                            [35,59], [37,53], [49,66], [42,66], [40,68], [53,79], [54,73],
-                            [51,82], [62,79], [37,69], [31,49], [37,53], [39,55], [42,68],
-                            [41,60], [39,69], [48,76], [47,61], [41,64], [43,67], [48,72],
-                            [46,63], [44,64], [45,50], [44,65] ]
+<?php   if ( is_array( $data[ 'weather' ] ) && count( $data[ 'weather' ] ) > 0 ):
+            echo "
+                    data: [ ";
+            $total_days = count( $data[ 'weather' ] );
+            $i = 1;
+            foreach ( $data[ 'weather' ] as $wd => $w ):
+                if ( $i == $total_days ):
+                    echo "[".$w->temp_low.",".$w->temp_high."]";
+                else:
+                    echo "[".$w->temp_low.",".$w->temp_high."],";
+                endif;
+                $i++;
+            endforeach;
+            echo "
+                    ]";
+        else:
+            echo " 
+                    visible: false";
+        endif; ?>
+
                 }, {
                     name: null,
+                    id: 'watts',
                     type: 'line',
                     lineWidth: 3,
                     data: [<?php echo $data[ 'chart' ][ 'y_vals' ]; ?>]
@@ -115,22 +211,114 @@
                     }
                 }
             },
+            exporting: {
+                buttons: {
+                    contextButton: { enabled: false }
+                },
+                chartOptions: {
+                    title: {
+                        text: '<?php echo $data[ 'chart' ][ 'title' ]; ?>'
+                    }
+                }
+            },
             credits: false
         });
 
-        // Show/Hide the Weather Overlay
+        // Get the chart instance to work with it
         //
-        var chart = $( '#month' ).highcharts(),
-            $button = $( '#toggleWeather' );
-        $button.click( function() {
+        var chart = $( '#month' ).highcharts();
+
+        // Toggle the weather overlay
+        //
+        $( '#toggleWeather' ).on( 'click', function() {
             var series = chart.series[0];
             if ( series.visible ) {
                 series.hide();
-                $button.removeClass( 'on' );
+                $( this ).removeClass( 'on' );
             } else {
                 series.show();
-                $button.addClass( 'on' );
+                $( this ).addClass( 'on' );
             }
+        });
+
+        // Toggle the weekend plotband overlay
+        //
+        var showing_weekends = true;
+        $( '#toggleWeekends' ).on( 'click', function() {
+            if ( ! showing_weekends ) {
+<?php 
+    // loop through the weekends array (again) to print the plotbands
+    //
+    if ( is_array( $data[ 'weekends' ] ) && count( $data[ 'weekends' ] ) > 0 ) {
+        foreach ( $data[ 'weekends' ] as $we => $vals ) {
+            $sat = ( isset( $vals[ 's' ] ) ) ? $vals[ 's' ] - 1.5 : $vals[ 'u' ] - 1.5;
+            $sun = ( isset( $vals[ 'u' ] ) ) ? $vals[ 'u' ] - 0.5 : $vals[ 's' ] - 0.5;
+            echo "
+                chart.xAxis[0].addPlotBand({
+                    color: 'rgba(120,120,120,.1)', from: ".$sat.", to: ".$sun.", id: 'weekend-".$we."' 
+                });";
+        }
+    } 
+?>
+
+                $( this ).addClass( 'on' );
+            } else {
+<?php
+    if ( is_array( $data[ 'weekends' ] ) && count( $data[ 'weekends' ] ) > 0 ) {
+        foreach ( $data[ 'weekends' ] as $we => $vals ) {
+            echo "
+                chart.xAxis[0].removePlotBand( 'weekend-".$we."' );";
+        }
+    }
+?>
+
+                $( this ).removeClass( 'on' );
+            }
+            showing_weekends = ! showing_weekends;
+        });
+
+        // Toggle the vacation plotband overlay
+        //
+        var showing_vacation = true;
+        $( '#toggleVacation' ).on( 'click', function() {
+            if ( ! showing_vacation ) {
+                chart.xAxis[0].addPlotBand({
+                    color: 'rgba(0,122,177,.1)', from: 15.5, to: 22.5, id: 'vacation-1'
+                });
+                $( this ).addClass( 'on' );
+            } else {
+                chart.xAxis[0].removePlotBand( 'vacation-1' );
+                $( this ).removeClass( 'on' );
+            }
+            showing_vacation = ! showing_vacation;
+        });
+
+        // Export buttons
+        //
+        $( '#exportChart' ).click( function() {
+            $( '#exportChartMenu' ).toggle().parent().toggleClass( 'active' );
+            $( '#exportChartMenu .png' ).click( function() {
+                chart.exportChart({
+                    sourceWidth: 960,
+                    sourceHeight: 320,
+                    scale: 1,
+                    type: 'image/png'
+                });
+            });
+            $( '#exportChartMenu .svg' ).click( function() {
+                chart.exportChart({
+                    sourceWidth: 960,
+                    scale: 1,
+                    type: 'image/svg+xml'
+                });
+            });
+            $( '#exportChartMenu .pdf' ).click( function() {
+                chart.exportChart({
+                    sourceWidth: 850,
+                    scale: 2,
+                    type: 'application/pdf'
+                });
+            });
         });
 
     });

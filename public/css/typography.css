@@ -1,3 +1,6 @@
+/**
+ * Headers */
+
 h1 {
     font-size: 24px;
     font-weight: normal;
@@ -12,3 +15,14 @@ h2 {
     h2.home {
         margin: 5px 0 20px 2px;
     }
+
+/**
+ * Colors */
+
+.blue-color { color: #007ab1; }
+.sky-color { color: #008eae; }
+.teal-color { color: #009a9c; }
+.foam-color { color: #00a57f; }
+.green-color { color: #00b158; }
+.lime-color { color: #55af53; }
+.yellow-color { color: #9eb64c; }

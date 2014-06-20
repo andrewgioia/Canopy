@@ -14,7 +14,9 @@ class Xml_model extends Model {
     //   @string $file (filename of the xml file)
     //   @pointer &$error (reference to $error variable)
     //
-    function get_xml_file( $file = '', &$error = false ) 
+    function get_xml_file( 
+        $file = '', 
+        &$error = false ) 
     {
         // Verify that a filename was passed in
         //

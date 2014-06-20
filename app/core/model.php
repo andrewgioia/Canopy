@@ -2,10 +2,10 @@
 
 class Model {
 
-	protected $_db;
+    protected $_db;
 
-	public function __construct(){
-		//connect to PDO here.
-		$this->_db = new Database();
-	}
+    public function __construct(){
+        // Connect to PDO here.
+        $this->_db = new Database();
+    }
 }
