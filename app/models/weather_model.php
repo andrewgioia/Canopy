@@ -8,7 +8,7 @@ class Weather_model extends Model {
         parent::__construct();
     }
 
-    // Fetch hourly weather data for a day and insert it into the db
+    // Fetch hourly weather data from WU for a day and insert it into the db
     //
     function pull_weather_for_day( 
         $y = 2014,
@@ -92,10 +92,21 @@ class Weather_model extends Model {
 
     // Get the hourly weather data, plus daily summary, for a day
     //
-    function get_weather_for_day( $y, $m, $d )
+    function get_hourly_weather_for_day( 
+        $y, 
+        $m, 
+        $d )
     {
-        //$results = $this->_db->select( 'SELECT * FROM weather' );
-        //return $results;
+        $day = date( 'Y-m-d', mktime( 0, 0, 0, $m, $d, $y ) );
+        $results = $this->_db->select( 
+           "SELECT * 
+            FROM weather_hours
+            WHERE date_day = '".$day."'
+            ORDER BY date_hour ASC" );
+        if ( is_array( $results ) ) {
+            return $results;
+        }
+        return false;
     }
 
     // Insert an hour row into the DB

@@ -3,6 +3,7 @@
 class Dashboard extends Controller {
 
     private $_xml;
+    private $_energy;
     private $_settings;
     private $_weather;
 
@@ -21,7 +22,7 @@ class Dashboard extends Controller {
         $display_date = '2014-04', 
         $ajax = 0 ) 
     {
-        // Cleanse the post variables if we got an ajax request
+        // Cleanse the post variables if we received an ajax request
         //
         if ( $_POST ) {
             $display_type = $_POST[ 'display_type' ];
@@ -46,12 +47,10 @@ class Dashboard extends Controller {
 
             // Get the x and y axis values for this chart
             //
-            $days = array();
-            $x_vals = array();
+            $plots = array();
             foreach ( $readings as $hour => $vals ) {
                 $d = date( 'd', strtotime( $vals->used ) );
-                $x_vals[] = date( 'D d', mktime( 0, 0, 0, $month, $d, $year ) );
-                $days[$d] += $vals->kwh;
+                $plots[ date( 'D d', mktime( 0, 0, 0, $month, $d, $year ) ) ] += $vals->kwh;
             }
 
             // Create the chart variables
@@ -59,8 +58,8 @@ class Dashboard extends Controller {
             $data[ 'chart' ] = array (
                 'title' => "Daily Energy Use&mdash;".
                     date( 'F Y', mktime( 0, 0, 0, $month, $day, $year ) ),
-                'x_days' => "'".implode( "','", $x_vals )."'",
-                'y_vals' => implode( ",", $days ) );
+                'x_days' => "'".implode( "','", array_keys( $plots ) )."'",
+                'y_vals' => implode( ",", array_values( $plots ) ) );
 
             // Get the weekends
             //
@@ -77,11 +76,40 @@ class Dashboard extends Controller {
             $data[ 'vacations' ] = 
                 $this->_settings->get_vacations_for_month( $year, $month );
 
+            $chart_view = "dashboard/month";
+
         } else if ( $display_type == 'day' ) {
 
-            // Get the day's values from XML
+            // Get the day's hourly readings from the database
             //
+            $readings = $this->_energy->get_readings_for_day( $year, $month, $day );
 
+            // Set the x axis (hours) as key= and y axis (kwh) as values in an array
+            //
+            $plots = array();
+            foreach ( $readings as $hour => $vals ) {
+                $plots[ date( 'ga', strtotime( $vals->used ) ) ] = $vals->kwh;
+            }
+
+            // Create the chart variables
+            //
+            $data[ 'chart' ] = array (
+                'title' => "Hourly Energy Use&mdash;".
+                    date( 'F d, Y', mktime( 0, 0, 0, $month, $day, $year ) ),
+                'x_hours' => "'".implode( "','", array_keys( $plots ) )."'",
+                'y_kwhs' => implode( ",", array_values( $plots ) ) );
+
+            // Disabling weekend and vacation overlays
+            //
+            $data[ 'weekends' ] = false;
+            $data[ 'vacations' ] = false;
+
+            // Get the hourly weather
+            //
+            $data[ 'weather' ] = 
+                $this->_weather->get_hourly_weather_for_day( $year, $month, $day );
+
+            $chart_view = "dashboard/day";
 
         } else {
 
@@ -96,10 +124,12 @@ class Dashboard extends Controller {
         $data[ 'd' ] = $day;
 
         if ( $ajax ) {
-            $this->view->render( 'dashboard/dashboard', $data );
+            $this->view->render( 'dashboard/menu', $data );
+            $this->view->render( $chart_view, $data );
         } else {
             $this->view->rendertemplate( 'header', $data );
-            $this->view->render( 'dashboard/dashboard', $data );
+            $this->view->render( 'dashboard/menu', $data );
+            $this->view->render( $chart_view, $data );
             $this->view->rendertemplate( 'footer', $data );
         }
     }
