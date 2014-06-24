@@ -30,7 +30,7 @@ class Database extends PDO{
     {
         ksort( $data );
 
-        $fieldNames = implode( ', ', array_keys( $data ) );
+        $fieldNames = "`".implode( '`, `', array_keys( $data ) )."`";
         $fieldValues = ':'.implode( ', :', array_keys( $data ) );
 
         $stmt = $this->prepare( "INSERT INTO $table ( $fieldNames ) VALUES ( $fieldValues ) ");

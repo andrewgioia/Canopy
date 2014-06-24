@@ -1,4 +1,19 @@
-<h1>Add Weather Data</h1>
+<!-- ENERGY -->
+
+<h1>Add Energy Data</h1>
+
+<form action="settings/energy/add_month" method="post" enctype="multipart/form-data"
+    id="addKwhMonth" style="float:left;">
+    <input type="file" name="month_xml" id="monthXml" class="file" />
+    <a href="javascript:;" class="blue button" id="submitAddXml">
+        Import energy XML file
+    </a>
+</form>
+
+
+<!-- WEATHER -->
+
+<h1 class="clear" style="padding-top: 40px;">Add Weather Data</h1>
 
 <form action="settings/weather/add_day" method="post" id="addDay" style="float:left;">
     <input type="text" name="date" id="date" class="datepicker" 
@@ -50,6 +65,10 @@
 <!-- Javascript Controls -->
 
 <script type="text/javascript">
+
+    $( '#submitAddXml' ).click( function() {
+        $( '#addKwhMonth' ).submit();
+    })
 
     $( '.datepicker' ).datepicker({
         dateFormat: 'MM d, yy',

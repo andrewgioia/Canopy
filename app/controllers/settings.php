@@ -2,11 +2,15 @@
 
 class Settings extends Controller {
 
+    private $_xml;
+    private $_energy;
     private $_settings;
     private $_weather;
 
     public function __construct(){
         parent::__construct();
+        $this->_xml = $this->loadModel( 'xml_model' );
+        $this->_energy = $this->loadModel( 'energy_model' );
         $this->_settings = $this->loadModel( 'settings_model' );
         $this->_weather = $this->loadModel( 'weather_model' );
     }
@@ -137,6 +141,38 @@ class Settings extends Controller {
             echo "There was a problem adding that vacation. Please try again.";
             return false;
         }
+    }
+
+    public function add_kwh_month()
+    {
+        // Check if there was an error passed
+        //
+        if ( !isset( $_FILES[ 'month_xml' ][ 'error' ] ) 
+                || is_array( $_FILES ['month_xml' ][ 'error' ] ) ) {
+            $error = "There was a problem with the file upload.";
+            return $error;
+        }
+
+        // Get the file content
+        //
+        $file = file_get_contents( $_FILES[ 'month_xml' ][ 'tmp_name' ] );
+        $xml = simplexml_load_string( $file );
+
+        // Convert XML into something workable and create the month array
+        //
+        $array = $this->_xml->convert_to_array( $xml );
+        $entries = $this->_xml->get_readings( $array );
+
+        // Get the x and y axis values for this chart
+        //
+        foreach ( $entries as $num => $entry ) {
+            $hour = date( 'Y-m-d H:i:s', $entry->timePeriod->start );
+            $kwh = number_format( $entry->value/1000, 0 );
+            $cost = number_format( $entry->cost/100000, 4 );
+            $result = $this->_energy->insert_entry( $hour, $kwh, $cost );
+        }
+
+        return true;
     }
 
 }

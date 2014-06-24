@@ -13,6 +13,7 @@ Router::get( '/settings/weather/add_day', 'settings@add_weather_for_day' );
 Router::post( '/settings/weather/add_day', 'settings@add_weather_for_day' );
 Router::get( '/settings/vacation/add', 'settings@add_vacation' );
 Router::post( '/settings/vacation/add', 'settings@add_vacation' );
+Router::post( '/settings/energy/add_month', 'settings@add_kwh_month' );
 
 // If no route is found, throw an error
 Router::error( 'error@index' );

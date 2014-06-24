@@ -9,6 +9,7 @@ class Dashboard extends Controller {
     public function __construct(){
         parent::__construct();
         $this->_xml = $this->loadModel( 'xml_model' );
+        $this->_energy = $this->loadModel( 'energy_model' );
         $this->_settings = $this->loadModel( 'settings_model' );
         $this->_weather = $this->loadModel( 'weather_model' );
     }
@@ -35,61 +36,52 @@ class Dashboard extends Controller {
         $day = date( 'd', strtotime( $display_date ) );
         $year = date( 'Y', strtotime( $display_date ) );
 
-        // Get the contents of the selected XML file
-        //        
-        $contents = $this->_xml->get_xml_file( $year.'-'.$month.'.xml', $error = false );
-
-        // Format the daily readings into a multidimensional array;
-        // each element is a day with an array of hours
+        // Build chart based on view type
         //
-        if ( ! $error ) {
+        if ( $display_type == 'month' ) {
 
-            // Convert XML into something workable and create the  month array
+            // Get the readings from the database for this month
             //
-            $array = $this->_xml->convert_to_array( $contents );
-            $entries = $this->_xml->get_readings( $array );
+            $readings = $this->_energy->get_readings_for_month( $year, $month );
 
-            // Build chart based on view type
+            // Get the x and y axis values for this chart
             //
-            if ( $display_type == 'month' ) {
-
-                $readings = $this->_xml->get_month( $entries );
-
-                // Get the x and y axis values for this chart
-                //
-                $days = array();
-                $x_vals = array();
-                foreach ( $readings as $day => $hours ) {
-                    $x_vals[] = date( 'D d', mktime( 0, 0, 0, $month, $day, $year ) );
-                    if ( is_array( $hours ) ) {
-                        foreach ( $hours as $hour => $vals ) {
-                            $days[$day] += $vals['kWh'];
-                        }
-                    }
-                }
-
-                $data[ 'chart' ] = array (
-                    'title' => "Daily Energy Use (".
-                        date( 'F Y', mktime( 0, 0, 0, $month, $day, $year ) ).")",
-                    'x_days' => "'".implode( "','", $x_vals )."'",
-                    'y_vals' => implode( ",", $days ) );
-
-                // Get the weekends
-                //
-                $data[ 'weekends' ] = 
-                    $this->_settings->get_weekends_for_month( $year, $month );
-
-                // Get the weather values
-                //
-                $data[ 'weather' ] = 
-                    $this->_weather->get_daily_weather_for_month( $year, $month );
-
-                // Get the vacation times
-                //
-                $data[ 'vacations' ] = 
-                    $this->_settings->get_vacations_for_month( $year, $month );
-
+            $days = array();
+            $x_vals = array();
+            foreach ( $readings as $hour => $vals ) {
+                $d = date( 'd', strtotime( $vals->used ) );
+                $x_vals[] = date( 'D d', mktime( 0, 0, 0, $month, $d, $year ) );
+                $days[$d] += $vals->kwh;
             }
+
+            // Create the chart variables
+            //
+            $data[ 'chart' ] = array (
+                'title' => "Daily Energy Use&mdash;".
+                    date( 'F Y', mktime( 0, 0, 0, $month, $day, $year ) ),
+                'x_days' => "'".implode( "','", $x_vals )."'",
+                'y_vals' => implode( ",", $days ) );
+
+            // Get the weekends
+            //
+            $data[ 'weekends' ] = 
+                $this->_settings->get_weekends_for_month( $year, $month );
+
+            // Get the weather values
+            //
+            $data[ 'weather' ] = 
+                $this->_weather->get_daily_weather_for_month( $year, $month );
+
+            // Get the vacation times
+            //
+            $data[ 'vacations' ] = 
+                $this->_settings->get_vacations_for_month( $year, $month );
+
+        } else if ( $display_type == 'day' ) {
+
+            // Get the day's values from XML
+            //
+
 
         } else {
 
